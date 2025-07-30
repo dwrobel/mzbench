@@ -208,9 +208,16 @@ set_proxy(Type, Value, NoProxy) ->
             false -> [];
             _ -> [parse_no_proxy(Str) || Str <- string:tokens(NoProxy, ",")]
         end,
-    {ok, {_, _, Host, Port, _, _}} = http_uri:parse(Value),
+    %% Replace http_uri:parse/1 with uri_string:parse/1 + manual validation
+    ParsedURI = uri_string:parse(Value),
+    {Host, Port} = extract_host_port(ParsedURI),
     lager:info("Using ~p:~p as ~p for auth (exceptions: ~p)", [Host, Port, Type, NoProxyList]),
     httpc:set_options([{Type, {{Host, Port}, NoProxyList}}], auth_profile).
+
+%% Helper function to extract host and port from uri_string() map
+extract_host_port(#{host := Host, port := Port}) -> {Host, Port};
+extract_host_port(#{host := Host}) -> {Host, 80};  % Default HTTP port
+extract_host_port(_) -> error(invalid_uri).
 
 parse_no_proxy(Str) ->
     Str2 = string:strip(Str),
