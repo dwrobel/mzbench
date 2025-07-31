@@ -27,7 +27,7 @@
             %,  {smtp, [{relay, "smtp.gmail.com"}, {port, 587},
             %           {username, "user"}, {password, "password"},{ssl, true}]}
         ]},
-        {network_interface, "127.0.0.1"},
+        {network_interface, "0.0.0.0"},
         {listen_port, 4800},
         {protocol, http},
         {cacertfile, none},
@@ -48,7 +48,7 @@
         {bench_log_read_chunk, 32000},
         {bench_log_max_dashboard, 2048000}, % Bytes
         {bench_poll_timeout, 1000},
-        {node_git, "https://github.com/djcruz93/mzbench.git"},
+        {node_git, "https://github.com/dwrobel/mzbench.git"},
         {node_deployment_path, "~/.local/share"},
         {worker_deployment_path, "~/.local/share/mzbench_workers"},
         {plugins_dir, "~/.local/share/mzbench_api/plugins"},
