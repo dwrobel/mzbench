@@ -72,6 +72,17 @@ Given that you can install mzbench in k8s with the command
 
     helm install --name mzbench-server deployment/helm/mzbench
 
+### On CentOS-9
+```
+git clone https://github.com/dwrobel/mzbench.git
+cd mzbench
+sudo dnf copr enable -y dwrobel/python-erl_terms
+cat requirements.txt | grep -v -e '^$' -e '^#' | awk  -F '>' '{print $1}' | awk -F '=' '{print "\"python3dist("$1")\""}' | xargs sudo dnf install -y
+sudo dnf install -y make git which erlang rsync /usr/bin/cc /usr/bin/c++ /usr/include/zlib.h /usr/bin/autoreconf
+export PATH=$PATH:$PWD/bin
+
+```
+
 ### From sources
 
 To use MZBench, you'll need:
