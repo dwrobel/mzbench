@@ -1,6 +1,7 @@
 import re
 from parsimonious.grammar import Grammar
 import parsimonious.exceptions
+from functools import reduce
 
 class ParseError(Exception):
     pass
@@ -94,9 +95,9 @@ def get_indent(line):
 
 def substitute(ir, env):
     if isinstance(ir, list):
-        return map(lambda a: substitute(a, env), ir)
+        return [substitute(a, env) for a in ir]
     if isinstance(ir, dict):
-        ir = {k: substitute(v, env) for k, v in ir.items()}
+        ir = {k: substitute(v, env) for k, v in list(ir.items())}
 
         if "function" in ir:
             if ir["function"] in ["var", "numvar"] and ir["args"][0] in env:

@@ -36,7 +36,7 @@ def substitute_vars(term_tree_root, env):
                 return value
             elif type_name == 'integer':
                 return int(value)
-        print("Couldn't convert {0} to type {1}".format(value, type_name))
+        print(("Couldn't convert {0} to type {1}".format(value, type_name)))
         return value
 
     def is_string_literal(s):

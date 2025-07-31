@@ -25,7 +25,8 @@ def _instruction_end(result):
     _mzbench_pipe.write("T {0}.\n".format(_encode_term(result)))
 
 
-def _instruction_failed((t, o, st)):
+def _instruction_failed(xxx_todo_changeme):
+    (t, o, st) = xxx_todo_changeme
     _mzbench_pipe.write("E {0} {1}.\n".format(t, o))
 
 
@@ -55,7 +56,7 @@ def _encode_term(term):
     elif (float == T): return _encode_num(term)
     elif (mzb_atom == T): return _encode_atom(term)
     elif (str == T): return _encode_str(term)
-    elif (unicode == T): return _encode_str(term)
+    elif (str == T): return _encode_str(term)
     else: return _encode_str("<unknown python term: {0}>".format(term))
 
 

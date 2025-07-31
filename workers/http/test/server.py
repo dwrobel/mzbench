@@ -3,13 +3,13 @@
 from contextlib import contextmanager
 import json
 from multiprocessing import Process
-import SimpleHTTPServer
-import SocketServer
+import http.server
+import socketserver
 import random
 
 port = random.randint(8777, 8888)
 
-class ServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
+class ServerHandler(http.server.SimpleHTTPRequestHandler):
 
     def do_GET(self):
         self.send_response(200)
@@ -36,7 +36,7 @@ class ServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 
 def serve():
     handler = ServerHandler
-    httpd = SocketServer.TCPServer(("", port), handler)
+    httpd = socketserver.TCPServer(("", port), handler)
     httpd.serve_forever()
 
 

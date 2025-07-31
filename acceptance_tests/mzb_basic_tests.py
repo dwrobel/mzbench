@@ -144,22 +144,22 @@ def data_endpoint_test():
         stderr=subprocess.PIPE)
 
     lout, lerr = log_process.communicate()
-    print 'Log collector stdout'
-    print lout
-    print 'Log collector stderr'
-    print lerr
+    print('Log collector stdout')
+    print(lout)
+    print('Log collector stderr')
+    print(lerr)
 
     csv_out, csv_err = csv_data_process.communicate()
-    print 'CSV data collector stdout'
-    print csv_out
-    print 'CSV data collector stderr'
-    print csv_err
+    print('CSV data collector stdout')
+    print(csv_out)
+    print('CSV data collector stderr')
+    print(csv_err)
 
     json_out, json_err = json_data_process.communicate()
-    print 'JSON data collector stdout'
-    print json_out
-    print 'JSON data collector stderr'
-    print json_err
+    print('JSON data collector stdout')
+    print(json_out)
+    print('JSON data collector stderr')
+    print(json_err)
 
     time.sleep(3)
 
@@ -192,16 +192,16 @@ def bench_results_test():
         stderr=subprocess.PIPE)
 
     lout, lerr = log_process.communicate()
-    print 'Log collector stdout'
-    print lout
-    print 'Log collector stderr'
-    print lerr
+    print('Log collector stdout')
+    print(lout)
+    print('Log collector stderr')
+    print(lerr)
 
     json_out, json_err = json_results_process.communicate()
-    print 'JSON results collector stdout'
-    print json_out
-    print 'JSON results collector stderr'
-    print json_err
+    print('JSON results collector stdout')
+    print(json_out)
+    print('JSON results collector stderr')
+    print(json_err)
 
     time.sleep(3)
 
@@ -263,8 +263,8 @@ def workers_per_node_test():
     out, err = log_process.communicate()
     log = "{0} {1}".format(out, err)
     if not re.findall('nodes_arg => 4', log):
-        print 'Out: ', out
-        print 'Err: ', err
+        print('Out: ', out)
+        print('Err: ', err)
         raise RuntimeError("The bench should have allocated 4 worker nodes")
 
 
@@ -277,7 +277,7 @@ def log_compression_test():
 def run_command_test():
 
     def run_command(bid):
-        print "Running command for {0}".format(bid)
+        print("Running command for {0}".format(bid))
         change_env_process = subprocess.Popen(
             [mzbench_script,
                 '--host=localhost:4800',
@@ -287,7 +287,7 @@ def run_command_test():
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE)
         change_env_res, change_env_err = change_env_process.communicate()
-        print 'Running command for {0}\n{1}'.format(change_env_res, change_env_err)
+        print('Running command for {0}\n{1}'.format(change_env_res, change_env_err))
 
     run_successful_bench(
                 scripts_dir + 'loop_with_vars.erl',
@@ -299,7 +299,7 @@ def run_command_test():
 def env_change_test():
 
     def change_var(bid):
-        print "Changing env for {0}".format(bid)
+        print("Changing env for {0}".format(bid))
         change_env_process = subprocess.Popen(
             [mzbench_script,
                 '--host=localhost:4800',
@@ -309,7 +309,7 @@ def env_change_test():
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE)
         change_env_res, change_env_err = change_env_process.communicate()
-        print 'Change env output: {0}\n{1}'.format(change_env_res, change_env_err)
+        print('Change env output: {0}\n{1}'.format(change_env_res, change_env_err))
         assert('set' == json.loads(change_env_res)['status'])
         time.sleep(20)
         change_env_process = subprocess.Popen(
@@ -321,7 +321,7 @@ def env_change_test():
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE)
         change_env_res, change_env_err = change_env_process.communicate()
-        print 'Change env output: {0}\n{1}'.format(change_env_res, change_env_err)
+        print('Change env output: {0}\n{1}'.format(change_env_res, change_env_err))
         assert('set' == json.loads(change_env_res)['status'])
 
     bench_id = run_successful_bench(
@@ -347,7 +347,7 @@ def env_change_test():
     assert json_data_ret_code == 0
     datapoints = [metric['datapoints'] for metric in json.loads(json_out) if metric['target'] == 'print.rps'][0]
     values = [d[0] for d in datapoints]
-    print "Datapoints: {0}".format(values)
+    print("Datapoints: {0}".format(values))
     assert(0.8 < values[1] < 1.2)
     assert(4.8 < values[4] < 5.2)
 

@@ -38,23 +38,23 @@ def start_mzbench_server(custom_data_location=None):
                      .format(node_location_param, custom_data_location_param))
 
     with open('{0}/test_server.config'.format(dirname), 'r') as f:
-        print(f.read())
+        print((f.read()))
 
     cmd('{0} start_server --config {1}/test_server.config'.format(mzbench_script, dirname))
     try:
         time.sleep(3) # give server some time to start
         yield
     except:
-        print ''
-        print '-------------------- >> begin server logs << ---------------------'
+        print('')
+        print('-------------------- >> begin server logs << ---------------------')
         logdir = os.path.join(mzbench_dir + 'server/_build/default/rel/mzbench_api/log')
         logfiles = [logfile for logfile in os.listdir(logdir)]
         logfile = sorted([os.path.join(logdir, l) for l in logfiles if l.startswith('erlang')], key=os.path.getmtime, reverse=True)[0]
         with open(logfile) as f:
             for line in f:
-                print line.rstrip().replace('\\n', '\n')
-        print '-------------------- >> end server logs   << ---------------------'
-        print ''
+                print(line.rstrip().replace('\\n', '\n'))
+        print('-------------------- >> end server logs   << ---------------------')
+        print('')
         raise
     finally:
         cmd('{0} stop_server'.format(mzbench_script))
@@ -95,7 +95,7 @@ def run_bench(name=None, worker_package_with_default_scenario=None, nodes=None,
             nodes_option = '--nodes 1'
 
     env_option = ' '.join(('--env={0}={1}'.format(k, v)
-        for k, v in env.iteritems()))
+        for k, v in env.items()))
 
     def run():
         if 'worker_branch' in env:
@@ -123,11 +123,11 @@ def run_bench(name=None, worker_package_with_default_scenario=None, nodes=None,
         try:
             bench_id = json.loads(start_out)['id']
         except Exception:
-            print 'mzbench returned invalid json: \nCommand: {0}\nOutput: {1}\nStderr: {2}'.format(invocation, start_out, start_err)
+            print('mzbench returned invalid json: \nCommand: {0}\nOutput: {1}\nStderr: {2}'.format(invocation, start_out, start_err))
             raise
 
         if (post_start is not None) and wait_status(bench_id, 'running', 240):
-            print "Calling post start for {0}".format(bench_id)
+            print("Calling post start for {0}".format(bench_id))
             post_start(bench_id)
 
         wait = subprocess.Popen(shlex.split(
@@ -142,12 +142,12 @@ def run_bench(name=None, worker_package_with_default_scenario=None, nodes=None,
 
     while attempt < max_retries:
 
-        print 'Attempt #{0}'.format(attempt)
+        print('Attempt #{0}'.format(attempt))
 
         try:
             (bench_id, success) = run()
         except Exception as e:
-            print "Unexpected error: {0}".format(e)
+            print("Unexpected error: {0}".format(e))
             bench_id, success = (None, False)
 
         if xor(success, should_fail):
@@ -159,24 +159,24 @@ def run_bench(name=None, worker_package_with_default_scenario=None, nodes=None,
             log = cmd(log_cmd)
 
             if expected_log_message_regex:
-                if isinstance(expected_log_message_regex, str) or isinstance(expected_log_message_regex, unicode):
+                if isinstance(expected_log_message_regex, str) or isinstance(expected_log_message_regex, str):
                     regex = re.compile(expected_log_message_regex, re.DOTALL + re.UNICODE)
                 else:
                     regex = expected_log_message_regex
 
                 if not regex.search(log):
-                    print
-                    print u"Log doesn't contain expected log message '{0}':\n".format(regex.pattern)
-                    print log
+                    print()
+                    print("Log doesn't contain expected log message '{0}':\n".format(regex.pattern))
+                    print(log)
                     raise RuntimeError
 
             if check_log_function:
                 maybe_error = check_log_function(log)
 
                 if maybe_error:
-                    print
-                    print "Log doesn't pass custom check:\n{0}\n\n".format(maybe_error)
-                    print log
+                    print()
+                    print("Log doesn't pass custom check:\n{0}\n\n".format(maybe_error))
+                    print(log)
                     raise RuntimeError
 
             if check_user_log_function:
@@ -186,23 +186,23 @@ def run_bench(name=None, worker_package_with_default_scenario=None, nodes=None,
                 maybe_error = check_user_log_function(log)
 
                 if maybe_error:
-                    print
-                    print "Log doesn't pass custom check:\n{0}\n\n".format(maybe_error)
-                    print log
+                    print()
+                    print("Log doesn't pass custom check:\n{0}\n\n".format(maybe_error))
+                    print(log)
                     raise RuntimeError
 
             return bench_id
 
-        print 'Attempt #{0} for bench-id {1} unexpectedly {2}, retrying.'.format(attempt, bench_id, 'succeeded' if should_fail else 'failed')
+        print('Attempt #{0} for bench-id {1} unexpectedly {2}, retrying.'.format(attempt, bench_id, 'succeeded' if should_fail else 'failed'))
         attempt += 1
 
     if (max_retries <= attempt):
-        print('All {0} attempts failed'.format(max_retries))
-        print('Log of the last attempt (bench {0}):'.format(bench_id))
+        print(('All {0} attempts failed'.format(max_retries)))
+        print(('Log of the last attempt (bench {0}):'.format(bench_id)))
 
         if bench_id is not None:
             log_cmd = mzbench_dir + 'bin/mzbench --host=localhost:4800 log {0}'.format(bench_id)
-            print cmd(log_cmd).replace('\\n', '\n')
+            print(cmd(log_cmd).replace('\\n', '\n'))
 
         raise RuntimeError('BenchId {0} for test {1} unexpectedly {2}'.format(
                 bench_id, name, 'succeeded' if should_fail else 'failed'))
@@ -221,7 +221,7 @@ def restart_bench(bench_id):
     try:
         return json.loads(restart_out)['id']
     except Exception:
-        print 'mzbench restart returned invalid json:\nOutput: {0}\nStderr: {1}'.format(restart_out, restart_err)
+        print('mzbench restart returned invalid json:\nOutput: {0}\nStderr: {1}'.format(restart_out, restart_err))
         raise
 
 def start_simple_bench(name, additional):
@@ -237,12 +237,12 @@ def start_simple_bench(name, additional):
     try:
         return json.loads(restart_out)['id']
     except Exception:
-        print 'mzbench restart returned invalid json:\nOutput: {0}\nStderr: {1}'.format(restart_out, restart_err)
+        print('mzbench restart returned invalid json:\nOutput: {0}\nStderr: {1}'.format(restart_out, restart_err))
         raise
 
 def wait_status(bench_id, status, n):
     if n <= 0:
-        print 'ERROR: Wait for status "running" has timed out!'
+        print('ERROR: Wait for status "running" has timed out!')
         return False
 
     wait = subprocess.Popen(shlex.split(
@@ -254,10 +254,10 @@ def wait_status(bench_id, status, n):
     try:
         current_status = json.loads(out)['status']
     except Exception:
-        print 'mzbench status returned invalid json: \nOutput: {0}\nStderr: {1}'.format(out, err)
+        print('mzbench status returned invalid json: \nOutput: {0}\nStderr: {1}'.format(out, err))
         raise
 
-    print "current_status: {0}".format(current_status)
+    print("current_status: {0}".format(current_status))
     if current_status == status:
         return True
     elif current_status == 'failed':

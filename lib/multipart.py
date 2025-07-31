@@ -1,7 +1,7 @@
 """Encode multipart form data to upload files via POST.
 http://code.activestate.com/recipes/578668-encode-multipart-form-data-for-uploading-files-via/"""
 
-from __future__ import print_function
+
 
 import mimetypes
 import random
@@ -42,7 +42,7 @@ def encode_multipart(fields, files, boundary=None):
         boundary = ''.join(random.choice(_BOUNDARY_CHARS) for i in range(30))
     lines = []
 
-    for name, value in fields.items():
+    for name, value in list(fields.items()):
         lines.extend((
             '--{0}'.format(boundary),
             'Content-Disposition: form-data; name="{0}"'.format(escape_quote(name)),

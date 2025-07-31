@@ -1,10 +1,10 @@
 
-from __future__ import print_function
+
 
 try:
     from urllib.parse import urlencode
 except ImportError:
-    from urllib import urlencode
+    from urllib.parse import urlencode
 
 import json
 import os
@@ -100,7 +100,7 @@ def start(host, script_file, script_content,
         params += [('node_commit', node_commit)]
 
     params += [('email', email) for email in emails]
-    params += [(k, v) for k, v in env.items()]
+    params += [(k, v) for k, v in list(env.items())]
 
     files = [('bench',
         {'filename': os.path.basename(script_file),
@@ -421,7 +421,7 @@ def assert_successful_request(perform_request):
                 if ('reason_code' in data and 'reason' in data):
                     raise MZBenchAPIException('Server call with arguments {0} failed with code {1} and reason: {2}\n{3}'.format(args, response.status_code, data['reason_code'], data['reason']))
                 else:
-                    from StringIO import StringIO
+                    from io import StringIO
                     io = StringIO()
                     json.dump(data, io, indent=4)
                     raise MZBenchAPIException('Server call with arguments {0} failed with code {1} respose body:\n{2}'.format(args, response.status_code, io.getvalue()))

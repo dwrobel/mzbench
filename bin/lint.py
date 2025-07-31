@@ -44,14 +44,14 @@ def lint_eunit_file_naming(root):
         try:
             for t in os.listdir(os.path.join(root, appdir, 'test')):
                 if t.endswith('_test.erl'):
-                    print "{0}/test/{1} has '_test' instead of '_tests' in the name and won't be tested by eunit".format(appdir, t)
+                    print("{0}/test/{1} has '_test' instead of '_tests' in the name and won't be tested by eunit".format(appdir, t))
                 if t.endswith('.erl') and not t.replace('_tests', '') in os.listdir(os.path.join(root, appdir, 'src')):
                     orphans.append(os.path.join(appdir, 'test', t))
         except OSError:
             pass
 
     if orphans:
-        print 'Orphan eunit files found: {0}'.format(orphans)
+        print('Orphan eunit files found: {0}'.format(orphans))
         sys.exit(1)
 
 

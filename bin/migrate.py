@@ -13,7 +13,7 @@ Options:
                     Number of parallel jobs, by default set to number of cores
 """
 
-from __future__ import print_function
+
 import os
 import subprocess
 import sys
@@ -69,7 +69,7 @@ def migrations_to_apply(data_dir):
 
 def migrate(data_dir, jobs):
     to_apply = migrations_to_apply(data_dir)
-    keys = to_apply.keys()
+    keys = list(to_apply.keys())
     keys.sort()
     for i in keys:
         print('')
@@ -89,7 +89,8 @@ def apply_migration(script_path, data_dir, jobs):
     pool = multiprocessing.Pool(processes=jobs)
     pool.map(migration_worker, [ (i, script_path, data_dir) for i in benchmarks(data_dir) ], 1)
 
-def migration_worker((bench_id, script_path, data_dir)):
+def migration_worker(xxx_todo_changeme):
+    (bench_id, script_path, data_dir) = xxx_todo_changeme
     bench_path = path.join(data_dir, bench_id)
     cmd = [script_path, bench_path]
     cmd_str = " ".join(cmd)

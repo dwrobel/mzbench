@@ -22,6 +22,9 @@ else:
     server_rel_dir = dirname + "/../server/_build/default/rel/mzbench_api/"
     server_error_log = dirname + "/../server/log/error.log"
 
+print(f"Using: server_rel_dir: {server_rel_dir}")
+print(f"Using: server_error_log: {server_error_log}")
+
 # Client-only functions
 doc_acc = """MZBench command-line interface
 
@@ -232,12 +235,12 @@ def clean():
 def is_server_started():
     with util.silent_stdout():
         try:
-            return util.check_output([server_rel_dir + "bin/mzbench_api","rpcterms", "mzb_api_server", "ensure_started"]).strip() == "ok"
+            return util.check_output([server_rel_dir + "bin/mzbench_api", "rpc", "mzb_api_server", "ensure_started"]).strip().decode() == "ok"
         except subprocess.CalledProcessError:
             return False
 
 def print_server_config():
-    print(util.check_output([server_rel_dir + "bin/mzbench_api","rpcterms", "mzb_api_server", "config_info"]))
+    print(util.check_output([server_rel_dir + "bin/mzbench_api","rpc", "mzb_api_server", "config_info"]))
 
 def ensure_server_started(attempts):
     if attempts <= 0:
@@ -272,7 +275,7 @@ def start_server(config):
             start_environ['ORIG_PATH'] = start_environ['PATH']
         if config is not None:
             start_environ['MZBENCH_CONFIG_FILE'] = os.path.abspath(config)
-        subprocess.check_call([server_rel_dir + 'bin/mzbench_api', 'start'], env=start_environ)
+        subprocess.check_call([server_rel_dir + 'bin/mzbench_api', 'daemon'], env=start_environ)
     except subprocess.CalledProcessError as e:
         print("Failed to execute server start command")
         sys.exit(e.returncode)
@@ -706,7 +709,8 @@ def augment_args(args):
 
 def apply_args(fun, kwargs):
     import inspect
-    argnames = inspect.getargspec(fun)[0]
+    sig = inspect.signature(fun)
+    argnames = list(sig.parameters.keys())
 
     def get_arg(argname, kwargs):
         result = kwargs.get('--' + argname)

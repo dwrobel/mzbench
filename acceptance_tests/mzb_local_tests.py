@@ -44,12 +44,10 @@ def devtool_run_local_tests():
 
 def devtool_list_templates_test():
     templates = os.listdir(mzbench_dir + 'worker_templates')
-    got_templates = filter(
-        lambda x: x,
-        cmd(mzbench_dir + 'bin/mzbench list_templates').split('\n'))
+    got_templates = [x for x in cmd(mzbench_dir + 'bin/mzbench list_templates').split('\n') if x]
     if sorted(templates) != sorted(got_templates):
-        print sorted(templates)
-        print sorted(got_templates)
+        print(sorted(templates))
+        print(sorted(got_templates))
         assert sorted(templates) == sorted(got_templates)
 
 def main():
