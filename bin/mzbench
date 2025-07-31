@@ -1,5 +1,5 @@
-#!/usr/bin/env python
-from __future__ import print_function
+#!/usr/bin/env python3
+
 import os
 try:
     import mzbench_server_marker
@@ -241,14 +241,14 @@ def print_server_config():
 
 def ensure_server_started(attempts):
     if attempts <= 0:
-       print
+       print()
        return False
     if not is_server_started():
        time.sleep(1)
        sys.stdout.write(".")
        sys.stdout.flush()
        return ensure_server_started(attempts - 1)
-    print
+    print()
     return True
 
 #=================================================================================================
@@ -329,7 +329,7 @@ def run(host, script_file, script_content, email, nodes, workers_per_node,
         nodes, workers_per_node, deallocate_after_bench, provision_nodes,
         provision_workers, name, cloud, tags, env, no_cert_check, exclusive)
     response = status(host, bench_id, wait=True, no_cert_check = no_cert_check)
-    if response[u'status'] == u'failed':
+    if response['status'] == 'failed':
         print('Bench failed')
         sys.exit(3)
 
@@ -383,15 +383,15 @@ def status(host, bench_id, wait, no_cert_check = False):
                     mins = (current_time - start_time) / 60
                     secs = (current_time - start_time) % 60
                     statusline = 'status: {0}{1}{2}'.format(
-                        response[u'status'],
-                        ' ' * (30 - len(response[u'status'])),
+                        response['status'],
+                        ' ' * (30 - len(response['status'])),
                         '{0:02}:{1:02}'.format(mins, secs))
                     print('\r' + statusline, end='')
 
-                if response[u'status'] in [u'failed', u'complete', u'stopped']:
+                if response['status'] in ['failed', 'complete', 'stopped']:
                     print('')
                     pretty_print(response)
-                    if response[u'status'] == u'failed':
+                    if response['status'] == 'failed':
                         sys.exit(3)
                     return response
                 sys.stdout.flush()
@@ -399,7 +399,7 @@ def status(host, bench_id, wait, no_cert_check = False):
         except KeyboardInterrupt:
             should_stop = '?'
             while should_stop not in 'yn':
-                should_stop = raw_input('\nStop the bench before quitting? (y/n) ')
+                should_stop = input('\nStop the bench before quitting? (y/n) ')
             if should_stop == 'y':
                 stop(host, bench_id)
             sys.exit(130)
@@ -423,12 +423,12 @@ def results(host, bench_id, wait, no_cert_check = False):
                 mins = (current_time - start_time) / 60
                 secs = (current_time - start_time) % 60
                 statusline = 'status: {0}{1}{2}'.format(
-                    response[u'status'],
-                    ' ' * (30 - len(response[u'status'])),
+                    response['status'],
+                    ' ' * (30 - len(response['status'])),
                     '{0:02}:{1:02}'.format(mins, secs))
                 print('\r' + statusline, end='')
 
-            if response[u'status'] in [u'failed', u'complete', u'stopped']:
+            if response['status'] in ['failed', 'complete', 'stopped']:
                 print('')
                 response = api.results(host, bench_id, wait)
                 pretty_print(response)
@@ -505,7 +505,7 @@ def data_default(gen):
             result[name]=[]
         result[name].append([value, timestamp])
 
-    pretty_print(map(lambda kv: {'target':kv[0], 'datapoints':kv[1]}, result.items()))
+    pretty_print([{'target':kv[0], 'datapoints':kv[1]} for kv in list(result.items())])
 
 def clusters_info(host, no_cert_check = False):
     response = api.clusters_info(host, no_cert_check = no_cert_check)
@@ -560,7 +560,7 @@ def run_or_validate(script, env, validate):
         pa += ["--pa", p]
     cmd = [os.path.join(escript_path, escript_name), script, '--pa', os.getcwd() + "/ebin"] + pa
 
-    for k, v in env.iteritems():
+    for k, v in env.items():
         cmd.append('--env')
         cmd.append(k + '=' + v)
 
@@ -679,7 +679,7 @@ def augment_args(args):
             print("invalid value for --workers_per_node: {0}".format(args['--workers_per_node']))
             sys.exit(4)
 
-    args['--env'] = dict(map(lambda x: x.split("=", 1), args['--env']))
+    args['--env'] = dict([x.split("=", 1) for x in args['--env']])
 
     if args['--deallocate_after_bench'] not in [None, 'true', 'false']:
         print("invalid value for --deallocate_after_bench: {0}".format(
